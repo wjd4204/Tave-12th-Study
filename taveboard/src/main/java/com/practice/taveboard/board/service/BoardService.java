@@ -3,6 +3,7 @@ package com.practice.taveboard.board.service;
 import com.practice.taveboard.board.dto.BoardCreateRequestDto;
 import com.practice.taveboard.board.dto.BoardListResponseDto;
 import com.practice.taveboard.board.dto.BoardSimpleResponseDto;
+import com.practice.taveboard.board.dto.BoardUpdateRequestDto;
 import com.practice.taveboard.board.entity.Board;
 import com.practice.taveboard.board.repository.BoardRepository;
 import com.practice.taveboard.common.format.exception.board.NotFoundBoardException;
@@ -33,6 +34,7 @@ public class BoardService {
     private final int TOTAL_ITEMS_PER_PAGE = 20;
 
 
+    // 게시글 생성
     public void createBoard(String username, BoardCreateRequestDto dto) throws Exception{
 
         User user = userRepository.findByUsername(username).orElseThrow(NotFoundUserException::new);
@@ -45,6 +47,7 @@ public class BoardService {
     }
 
 
+    // 게시글 리스트 조회
     public BoardListResponseDto getBoards(String username, int page){
         Page<Board> boardPage = boardRepository.findAllByCreatedTimeDesc(PageRequest.of(page, TOTAL_ITEMS_PER_PAGE));
 
@@ -54,26 +57,44 @@ public class BoardService {
                 .list(boardPage.getContent().stream().map((board) -> BoardSimpleResponseDto.builder()
                         .title(board.getTitle())
                         .content(board.getContent())
-                        .username(username)
+                        .nickname(board.getUser().getNickname())
                         .createdTime(board.getCreatedTime())
                         .build())
                         .collect(Collectors.toList()))
                 .build();
     }
 
-
-    public BoardSimpleResponseDto getDetailBoards(String username, int boardId){
+    // 게시글 상세 조회
+    public BoardSimpleResponseDto getDetailBoards(String username, Long boardId){
         Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoardException::new);
 
         return BoardSimpleResponseDto.builder()
                 .title(board.getTitle())
                 .content(board.getContent())
-                .username(board.getUser().getUsername())
+                .nickname(board.getUser().getNickname())
                 .createdTime(board.getCreatedTime())
                 .build();
 
     }
 
+    // 게시글 수정
+    public void updateBoards(String username, Long boardId, BoardUpdateRequestDto dto){
+        Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoardException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(NotFoundUserException::new);
+
+        if((board.getUser().getNickname()).equals(user.getNickname())) {
+            board.update(dto.getTitle(), dto.getContent());
+        }
+    }
+
+    public void deleteBoards(String username, Long boardId){
+        Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoardException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(NotFoundUserException::new);
+
+        if((board.getUser().getNickname()).equals(user.getNickname())){
+            boardRepository.deleteById(boardId);
+        }
+    }
 
 
 }

@@ -15,7 +15,7 @@ public class Board extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @NotNull
     private String title;
@@ -30,5 +30,6 @@ public class Board extends BaseTimeEntity {
     public void update(String title, String content){
         this.title = title;
         this.content = content;
+
     }
 }

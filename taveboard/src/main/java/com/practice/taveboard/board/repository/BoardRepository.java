@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-    Optional<Board> findById(int id);
+    Optional<Board> findById(Long id);
 
     @Query("select f from BOARD_TABLE f order by f.createdTime")
     Page<Board> findAllByCreatedTimeDesc(Pageable pageable);

@@ -3,6 +3,7 @@ package com.practice.taveboard.board.controller;
 import com.practice.taveboard.board.dto.BoardCreateRequestDto;
 import com.practice.taveboard.board.dto.BoardListResponseDto;
 import com.practice.taveboard.board.dto.BoardSimpleResponseDto;
+import com.practice.taveboard.board.dto.BoardUpdateRequestDto;
 import com.practice.taveboard.board.service.BoardService;
 import com.practice.taveboard.common.format.success.SuccessResponse;
 import io.swagger.annotations.ApiOperation;
@@ -43,9 +44,30 @@ public class BoardController {
     notes = "조회 된 게시글 리스트 중 하나를 클릭하여 상세 조회 합니다.")
     @GetMapping("/{boardId}")
     public SuccessResponse<BoardSimpleResponseDto> getDetailBoards(@ApiIgnore Principal principal,
-                                                                   @PathVariable(value = "boardId", required = true) int boardId){
+                                                                   @PathVariable(value = "boardId", required = true) Long boardId){
         String username = "박정곤";
 
         return new SuccessResponse(boardService.getDetailBoards(username, boardId));
+    }
+
+    @ApiOperation(value = "게시글 수정",
+            notes = "지정된 게시글의 제목 내용을 수정합니다.")
+    @PatchMapping("/{boardId}")
+    public SuccessResponse updateBoards(@ApiIgnore Principal principal,
+                                        @PathVariable(value = "boardId", required = true) Long boardId,
+                                        @RequestBody BoardUpdateRequestDto boardUpdateRequestDto){
+        String username = "박정곤";
+        boardService.updateBoards(username, boardId, boardUpdateRequestDto);
+        return SuccessResponse.ok("update Success");
+    }
+
+    @ApiOperation(value = "게시글 삭제",
+    notes = "게시글을 삭제합니다.")
+    @DeleteMapping("/{boardId}")
+    public SuccessResponse deleteBoards(@ApiIgnore Principal principal,
+                                        @PathVariable(value = "boardId", required = true) Long boardId){
+        String username = "박정곤";
+        boardService.deleteBoards(username, boardId);
+        return SuccessResponse.ok("delete Success");
     }
 }

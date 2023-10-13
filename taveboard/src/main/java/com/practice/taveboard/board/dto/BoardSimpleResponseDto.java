@@ -13,6 +13,6 @@ public class BoardSimpleResponseDto {
 
     private String title;
     private String content;
-    private String username;
+    private String nickname;
     private LocalDateTime createdTime;
 }
