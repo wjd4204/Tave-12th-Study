@@ -3,6 +3,7 @@ package com.myboard.sbb.question;
 import com.myboard.sbb.answer.AnswerForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,12 +23,13 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping("/list")
-    public String list(Model model) {   // Model 객체는 따로 생성할 필요없이 컨트롤러 메서드의 매개변수로 지정하기만 하면 자동으로 Model 객체를 생성해줌
-        List<Question> questionList = this.questionService.getList();
+    // Model 객체는 따로 생성할 필요없이 컨트롤러 메서드의 매개변수로 지정하기만 하면 자동으로 Model 객체를 생성해줌
+    public String list(Model model,@RequestParam(value = "page",defaultValue = "0") int page) {  // 스프링의 페이징은 첫페이지가 1이 아닌 0임!!
+        Page<Question> paging = this.questionService.getList(page);
 
         // model 객체는 자바클래스와 템플릿간의 연결고리 역할을 한다.
         // model 객체에 값을(questionList)을 담아두면 템플릿에서 그 값을 사용할 수 있다.
-        model.addAttribute("questionList",questionList);
+        model.addAttribute("paging",paging);
         return "question_list";
     }
 
