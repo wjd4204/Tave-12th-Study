@@ -4,10 +4,11 @@ import com.myboard.sbb.answer.Answer;
 import com.myboard.sbb.question.Question;
 import com.myboard.sbb.question.QuestionRepository;
 import com.myboard.sbb.question.QuestionService;
-import jakarta.transaction.Transactional;
+import jakarta.persistence.Id;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +22,6 @@ class SbbApplicationTests {
 
     @Autowired
     private QuestionService questionService;
-
     @Test
     void testJpa() {
         for (int i = 1; i <= 300; i++) {
