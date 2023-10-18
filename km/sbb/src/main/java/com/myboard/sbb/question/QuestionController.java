@@ -12,11 +12,14 @@ import java.util.List;
 public class QuestionController {
 
     // questionRepository 객체가 자동으로 주입된다.
-    private final QuestionRepository questionRepository;
+  //  private final QuestionRepository questionRepository;
+
+    // 생성자 방식으로 의존성 주입
+    private final QuestionService questionService;
 
     @GetMapping("/question/list")
     public String list(Model model) {   // Model 객체는 따로 생성할 필요없이 컨트롤러 메서드의 매개변수로 지정하기만 하면 자동으로 Model 객체를 생성해줌
-        List<Question> questionList = this.questionRepository.findAll();
+        List<Question> questionList = this.questionService.getList();
 
         // model 객체는 자바클래스와 템플릿간의 연결고리 역할을 한다.
         // model 객체에 값을(questionList)을 담아두면 템플릿에서 그 값을 사용할 수 있다.
