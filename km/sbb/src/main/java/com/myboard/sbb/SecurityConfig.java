@@ -3,6 +3,8 @@ package com.myboard.sbb;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,8 +32,11 @@ public class SecurityConfig {
                                 XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
                         .formLogin((formLogin) -> formLogin     // 시큐리티의 로그인 설정을 담당하는 부분으로
                         .loginPage("/user/login")               // 로그인 페이지의 URL 은 왼쪽과 같고
-                        .defaultSuccessUrl("/"));       // 로그인 성공시에 이동하는 디폴트 페이지는 루트 URL 임을 의미한다
-
+                        .defaultSuccessUrl("/"))      // 로그인 성공시에 이동하는 디폴트 페이지는 루트 URL 임을 의미한다
+                        .logout((logout) -> logout      // 로그아웃을 위한 설정 추가
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+                        .logoutSuccessUrl("/")      // 로그아웃이 성공하면 루트페이지("/")로 이동하게 함
+                        .invalidateHttpSession(true));  // 로그아웃시 생성된 사용자 세션도 삭제하도록 처리
         return http.build();
     }
 
@@ -39,5 +44,13 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    // AuthenticationManager 는 시큐리티의 인증을 담당한다.
+    // 사용자 인증시 앞에서 작성한 UserSecurityService 와 PasswordEncoder를 사용한다.
+    AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }
