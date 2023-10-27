@@ -12,3 +12,4 @@ values ('3', '마이네임', '드래곤', now(), now());
 
 insert into BOARD_TABLE(TITLE, CONTENT, NICKNAME, CREATED_TIME, MODIFIED_TIME)
 values ('4', '정박곤', '드래곤', now(), now());
+

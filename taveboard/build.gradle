@@ -55,6 +55,9 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter:5.8.1"
     testImplementation "org.testcontainers:junit-jupiter:1.16.3"
 
+    //AOP
+    implementation "org.springframework.boot:spring-boot-starter-aop"
+
 }
 
 tasks.named('test') {
